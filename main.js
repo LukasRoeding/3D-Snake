@@ -56,6 +56,14 @@ function newTail() {
     }
 }
 
+function death() {
+    snake.position.set(0,0,0)
+    for (let index = 0; index < tail.length; index++) {
+        scene.remove(tail[index]);
+    }
+    tail = [];
+}
+
 function animate() {
     requestAnimationFrame(animate);
     if (movePause == false) {
@@ -81,6 +89,11 @@ function animate() {
         } else if (pressedKey == "e") {
             snake.position.x = snake.position.x - 1;
         }
+        for (let index = 0; index < tail.length; index++) {
+            if (snake.position.x == tail[index].position.x && snake.position.y == tail[index].position.y && snake.position.z == tail[index].position.z) {
+                death();
+            }
+        }
         if (tail[0]) {
             for (let index = tail.length - 1; index >= 1; index--) {
                 tail[index].position.x = tail[index-1].position.x;
@@ -100,11 +113,7 @@ function animate() {
     }
     
     if (Math.abs(snake.position.x) > 25 || Math.abs(snake.position.y) > 25 || Math.abs(snake.position.z) > 25) {
-        snake.position.set(0,0,0)
-        for (let index = 0; index < tail.length; index++) {
-            scene.remove(tail[index]);
-        }
-        tail = [];
+        death();
     }
     controls.update();
     renderer.render(scene, camera);
