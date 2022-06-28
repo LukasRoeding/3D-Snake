@@ -15,7 +15,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x005000);
+renderer.setClearColor(0x000000);
 document.body.appendChild(renderer.domElement);
 
 document.addEventListener('keydown', logKey);
@@ -39,7 +39,7 @@ for (let index = 0; index < grid.length; index++) {
 }
 
 const snakeGeometry = new THREE.BoxGeometry(1, 1, 1)
-const snakeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const snakeMaterial = new THREE.MeshBasicMaterial({ color: 0xE10600 });
 const snake = new THREE.Mesh(snakeGeometry, snakeMaterial);
 scene.add(snake);
 
@@ -79,6 +79,7 @@ function death() {
 function animate() {
     requestAnimationFrame(animate);
     if (movePause == false) {
+        console.log(snake)
         if (foodEaten) {
             newTail();
             foodEaten = false;
@@ -115,7 +116,7 @@ function animate() {
             eat();
         }
         movePause = true; 
-
+        
         setTimeout(() => {
             movePause = false
         }, 300)
@@ -123,6 +124,7 @@ function animate() {
     
     if (Math.abs(snake.position.x) > 25 || Math.abs(snake.position.y) > 25 || Math.abs(snake.position.z) > 25) {
         death();
+        window.alert("Du noob bist gestorben!")
     }
     controls.update();
     renderer.render(scene, camera);

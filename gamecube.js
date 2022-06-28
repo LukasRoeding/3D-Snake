@@ -1,14 +1,15 @@
 import * as THREE from './node_modules/three/build/three.module.js';
 
 const geometry = new THREE.BoxGeometry(51, 51, 51)
-const material = new THREE.MeshBasicMaterial({ color: 0x321637 });
-material.opacity = 0.5;
+const material = new THREE.MeshBasicMaterial({ color: 0xFFFFFF
+ });
+material.opacity = 0.05;
 material.transparent = true;
 const gamecube = new THREE.Mesh(geometry, material);
 
 let grid = [];
 const size = 51;
-const divisions = 4;
+const divisions = 10;
 
 const gridTop = new THREE.GridHelper( size, divisions )
 gridTop.position.y += 25.5;
