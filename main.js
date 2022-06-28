@@ -44,6 +44,15 @@ function eat() {
 }
 
 function newTail() {
+    var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
+    num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
+    food.position.x = num;
+    var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
+    num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
+    food.position.y = num;
+    var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
+    num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
+    food.position.z = num;
     const tailGeometry = new THREE.BoxGeometry(1, 1, 1)
     const tailMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const tailElement = new THREE.Mesh(tailGeometry, tailMaterial);
@@ -63,7 +72,8 @@ function death() {
     }
     tail = [];
 }
-
+newTail()
+newTail()
 function animate() {
     requestAnimationFrame(animate);
     if (movePause == false) {
@@ -71,10 +81,15 @@ function animate() {
             newTail();
             foodEaten = false;
         }
-        if(tail[0]) {
-             tail[0].position.x = snake.position.x;
-             tail[0].position.y = snake.position.y;
-             tail[0].position.z = snake.position.z;
+        if (tail[0]) {
+            for (let index = tail.length - 1; index >= 1; index--) {
+                tail[index].position.x = tail[index-1].position.x;
+                tail[index].position.y = tail[index-1].position.y;
+                tail[index].position.z = tail[index-1].position.z;
+            }
+            tail[0].position.x = snake.position.x;
+            tail[0].position.y = snake.position.y;
+            tail[0].position.z = snake.position.z;
         }
         if (pressedKey == "w") {
             snake.position.y = snake.position.y + 1;
@@ -94,14 +109,6 @@ function animate() {
                 death();
             }
         }
-        if (tail[0]) {
-            for (let index = tail.length - 1; index >= 1; index--) {
-                tail[index].position.x = tail[index-1].position.x;
-                tail[index].position.y = tail[index-1].position.y;
-                tail[index].position.z = tail[index-1].position.z;
-            }
-        }
-
         if (snake.position.x == food.position.x && snake.position.y == food.position.y && snake.position.z == food.position.z) {
             eat();
         }
