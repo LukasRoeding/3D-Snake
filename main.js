@@ -72,8 +72,6 @@ function death() {
     }
     tail = [];
 }
-newTail()
-newTail()
 function animate() {
     requestAnimationFrame(animate);
     if (movePause == false) {
