@@ -20,7 +20,11 @@ document.body.appendChild(renderer.domElement);
 
 document.addEventListener('keydown', logKey);
 function logKey(e) {
-    pressedKey  = e.key;
+    if (e.key == "q" || e.key == "w" || e.key == "e" || e.key == "a" || e.key == "s" || e.key == "d") {
+        console.log(e.key)
+       pressedKey  = e.key; 
+    }
+    
 }
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.listenToKeyEvents( window );
