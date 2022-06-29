@@ -140,7 +140,7 @@ function animate() {
         
         setTimeout(() => {
             movePause = false
-        }, 200)
+        }, 250)
     }
     
     if (snake.position.x > 25) {
