@@ -13,7 +13,6 @@ let pressedKey = 'w'
 let activeControl;
 let foodEaten = false;
 let counter = 3;
-let eatenFood;
 let directionVector = new THREE.Vector3();
 directionVector.set(0,1,0)
 const scene = new THREE.Scene();
@@ -54,16 +53,15 @@ scene.add(snake);
 
 function eat(food) {
     foodEaten = true;
-    eatenFood = food;
     var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
-    eatenFood.position.x = num;
+    food.position.x = num;
     var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
-    eatenFood.position.y = num;
+    food.position.y = num;
     var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
-    eatenFood.position.z = num;
+    food.position.z = num;
 }
 
 function newTail() {
