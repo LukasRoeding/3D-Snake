@@ -83,6 +83,7 @@ function death() {
         scene.remove(tail[index]);
     }
     tail = [];
+    window.alert("You Lost!")
 }
 
 function onclick(event) {
@@ -139,11 +140,21 @@ function animate() {
         
         setTimeout(() => {
             movePause = false
-        }, 300)
+        }, 200)
     }
     
-    if (Math.abs(snake.position.x) > 25 || Math.abs(snake.position.y) > 25 || Math.abs(snake.position.z) > 25) {
-        death();
+    if (snake.position.x > 25) {
+        snake.position.x = -25;
+    } else if (snake.position.x < -25) {
+        snake.position.x = 25;
+    } else if (snake.position.y < -25) {
+        snake.position.y = 25;
+    } else if (snake.position.y > 25) {
+        snake.position.y = -25;
+    } else if (snake.position.z < -25) {
+        snake.position.z = 25;
+    } else if (snake.position.z > 25) {
+        snake.position.z = -25;
     }
     controls.update();
     renderer.render(scene, camera);
