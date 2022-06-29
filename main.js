@@ -127,7 +127,6 @@ function animate() {
         } else if (pressedKey == "e") {
             snake.position.x = snake.position.x - 1;
         }
-        camera.lookAt(snake.position.x, snake.position.y, snake.position.z)
         for (let index = 0; index < tail.length; index++) {
             if (snake.position.x == tail[index].position.x && snake.position.y == tail[index].position.y && snake.position.z == tail[index].position.z) {
                 death();
