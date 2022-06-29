@@ -13,8 +13,6 @@ let pressedKey = 'w'
 let activeControl;
 let foodEaten = false;
 let counter = 3;
-let directionVector = new THREE.Vector3();
-directionVector.set(0,1,0)
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
