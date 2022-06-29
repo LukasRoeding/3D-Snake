@@ -17,7 +17,10 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000);
+renderer.domElement.addEventListener("click", onclick, true);
 document.body.appendChild(renderer.domElement);
+
+var raycaster = new THREE.Raycaster();
 
 document.addEventListener('keydown', logKey);
 function logKey(e) {
@@ -39,7 +42,8 @@ for (let index = 0; index < grid.length; index++) {
 }
 
 for (let index = 0; index < helpers.length; index++) {
-    scene.add(helpers[index]);  
+    scene.add(helpers[index]);
+    helpers[index].cursor = 'pointer';
 }
 
 const snakeGeometry = new THREE.BoxGeometry(1, 1, 1)
@@ -80,10 +84,21 @@ function death() {
     }
     tail = [];
 }
+
+function onclick(event) {
+    var mouse = new THREE.Vector2();
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects( helpers, true );
+    if (intersects.length > 0) {
+        pressedKey = intersects[0].object.name;
+    }
+}
+
 function animate() {
     requestAnimationFrame(animate);
     if (movePause == false) {
-        console.log(snake)
         if (foodEaten) {
             newTail();
             foodEaten = false;
