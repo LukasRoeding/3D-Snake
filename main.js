@@ -1,15 +1,18 @@
 import * as THREE from './node_modules/three/build/three.module.js';
 import { OrbitControls } from './orbitcontrols.js';
 import { gamecube, grid } from './gamecube.js';
-import { food } from './food.js'
+import { giveMeFood } from './food.js'
 import { helpers } from './controlhelper.js'
 
+let allTheFood = giveMeFood(20)
 let highscore = 0;
 const highscoreElement = document.getElementById("highscore")
 let movePause = false;
 let tail = [];
 let pressedKey = 'w'
+let activeControl;
 let foodEaten = false;
+let eatenFood;
 let directionVector = new THREE.Vector3();
 directionVector.set(0,1,0)
 const scene = new THREE.Scene();
@@ -22,20 +25,16 @@ document.body.appendChild(renderer.domElement);
 
 var raycaster = new THREE.Raycaster();
 
-document.addEventListener('keydown', logKey);
-function logKey(e) {
-    if (e.key == "q" || e.key == "w" || e.key == "e" || e.key == "a" || e.key == "s" || e.key == "d") {
-       pressedKey  = e.key; 
-    }
-    
-}
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.listenToKeyEvents( window );
 camera.position.set(60, 60, 0);
 controls.update();
-
 scene.add(gamecube);
-scene.add(food);
+
+console.log(allTheFood)
+for (let index = 0; index < allTheFood.length; index++) {
+    scene.add(allTheFood[index])  
+}
 
 for (let index = 0; index < grid.length; index++) {
     scene.add(grid[index]);   
@@ -43,30 +42,32 @@ for (let index = 0; index < grid.length; index++) {
 
 for (let index = 0; index < helpers.length; index++) {
     scene.add(helpers[index]);
-    helpers[index].cursor = 'pointer';
 }
+activeControl = helpers[0];
+activeControl.material.color.setHex(0xffd700);
 
 const snakeGeometry = new THREE.BoxGeometry(1, 1, 1)
 const snakeMaterial = new THREE.MeshBasicMaterial({ color: 0xE10600 });
 const snake = new THREE.Mesh(snakeGeometry, snakeMaterial);
 scene.add(snake);
 
-function eat() {
+function eat(food) {
     foodEaten = true;
+    eatenFood = food;
 }
 
 function newTail() {
     var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
-    food.position.x = num;
+    eatenFood.position.x = num;
     var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
-    food.position.y = num;
+    eatenFood.position.y = num;
     var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
-    food.position.z = num;
+    eatenFood.position.z = num;
     const tailGeometry = new THREE.BoxGeometry(1, 1, 1)
-    const tailMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const tailMaterial = new THREE.MeshBasicMaterial({ color: 0xE10600 });
     const tailElement = new THREE.Mesh(tailGeometry, tailMaterial);
     scene.add(tailElement);
     tail.push(tailElement);
@@ -93,7 +94,20 @@ function onclick(event) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects( helpers, true );
     if (intersects.length > 0) {
-        pressedKey = intersects[0].object.name;
+        if (
+            Math.abs(intersects[0].object.position.x) == Math.abs(activeControl.position.x) && 
+            Math.abs(intersects[0].object.position.y) == Math.abs(activeControl.position.y) && 
+            Math.abs(intersects[0].object.position.z) == Math.abs(activeControl.position.z) &&
+            tail.length > 0
+        ) {
+            return;
+        } else {
+            activeControl.material.color.setHex(0x00ffff);
+            activeControl = intersects[0].object;
+            pressedKey = activeControl.name;
+            activeControl.material.color.setHex(0xffd700)
+        }
+       
     }
 }
 
@@ -132,8 +146,10 @@ function animate() {
                 death();
             }
         }
-        if (snake.position.x == food.position.x && snake.position.y == food.position.y && snake.position.z == food.position.z) {
-            eat();
+        for (let index = 0; index < allTheFood.length; index++) {
+            if (snake.position.x == allTheFood[index].position.x && snake.position.y == allTheFood[index].position.y && snake.position.z == allTheFood[index].position.z) {
+                eat(allTheFood[index]);
+            }   
         }
         movePause = true; 
         
