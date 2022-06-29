@@ -12,6 +12,7 @@ let tail = [];
 let pressedKey = 'w'
 let activeControl;
 let foodEaten = false;
+let counter = 3;
 let eatenFood;
 let directionVector = new THREE.Vector3();
 directionVector.set(0,1,0)
@@ -116,7 +117,12 @@ function animate() {
     if (movePause == false) {
         if (foodEaten) {
             newTail();
-            foodEaten = false;
+            counter--;
+            if (counter == 0) {
+                foodEaten = false;
+                counter = 3;
+            }
+            
         }
         if (tail[0]) {
             for (let index = tail.length - 1; index >= 1; index--) {
