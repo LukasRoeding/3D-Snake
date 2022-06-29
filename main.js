@@ -55,9 +55,6 @@ scene.add(snake);
 function eat(food) {
     foodEaten = true;
     eatenFood = food;
-}
-
-function newTail() {
     var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
     eatenFood.position.x = num;
@@ -67,6 +64,9 @@ function newTail() {
     var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
     eatenFood.position.z = num;
+}
+
+function newTail() {
     const tailGeometry = new THREE.BoxGeometry(1, 1, 1)
     const tailMaterial = new THREE.MeshBasicMaterial({ color: 0xE10600 });
     const tailElement = new THREE.Mesh(tailGeometry, tailMaterial);
