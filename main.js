@@ -4,7 +4,7 @@ import { gamecube, grid } from './gamecube.js';
 import { giveMeFood } from './food.js'
 import { helpers } from './controlhelper.js'
 
-let allTheFood = giveMeFood(20)
+let allTheFood = giveMeFood(16)
 let highscore = 0;
 const highscoreElement = document.getElementById("highscore")
 let movePause = false;
@@ -27,7 +27,7 @@ var raycaster = new THREE.Raycaster();
 
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.listenToKeyEvents( window );
-camera.position.set(60, 60, 0);
+camera.position.set(40, 40, 0);
 controls.update();
 scene.add(gamecube);
 
@@ -57,13 +57,13 @@ function eat(food) {
 }
 
 function newTail() {
-    var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
+    var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
     eatenFood.position.x = num;
-    var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
+    var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
     eatenFood.position.y = num;
-    var num = Math.floor(Math.random()*25) + 1; // this will get a number between 1 and 99;
+    var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
     eatenFood.position.z = num;
     const tailGeometry = new THREE.BoxGeometry(1, 1, 1)
@@ -158,18 +158,18 @@ function animate() {
         }, 250)
     }
     
-    if (snake.position.x > 25) {
-        snake.position.x = -25;
-    } else if (snake.position.x < -25) {
-        snake.position.x = 25;
-    } else if (snake.position.y < -25) {
-        snake.position.y = 25;
-    } else if (snake.position.y > 25) {
-        snake.position.y = -25;
-    } else if (snake.position.z < -25) {
-        snake.position.z = 25;
-    } else if (snake.position.z > 25) {
-        snake.position.z = -25;
+    if (snake.position.x > 20) {
+        snake.position.x = -20;
+    } else if (snake.position.x < -20) {
+        snake.position.x = 20;
+    } else if (snake.position.y < -20) {
+        snake.position.y = 20;
+    } else if (snake.position.y > 20) {
+        snake.position.y = -20;
+    } else if (snake.position.z < -20) {
+        snake.position.z = 20;
+    } else if (snake.position.z > 20) {
+        snake.position.z = -20;
     }
     controls.update();
     renderer.render(scene, camera);
