@@ -9,7 +9,7 @@ const gamecube = new THREE.Mesh(geometry, material);
 
 let grid = [];
 const size = 51;
-const divisions = 10;
+const divisions = 2;
 
 const gridTop = new THREE.GridHelper( size, divisions )
 gridTop.position.y += 25.5;

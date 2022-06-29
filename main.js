@@ -2,6 +2,7 @@ import * as THREE from './node_modules/three/build/three.module.js';
 import { OrbitControls } from './orbitcontrols.js';
 import { gamecube, grid } from './gamecube.js';
 import { food } from './food.js'
+import { helpers } from './controlhelper.js'
 
 let highscore = 0;
 const highscoreElement = document.getElementById("highscore")
@@ -21,14 +22,13 @@ document.body.appendChild(renderer.domElement);
 document.addEventListener('keydown', logKey);
 function logKey(e) {
     if (e.key == "q" || e.key == "w" || e.key == "e" || e.key == "a" || e.key == "s" || e.key == "d") {
-        console.log(e.key)
        pressedKey  = e.key; 
     }
     
 }
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.listenToKeyEvents( window );
-camera.position.set(60, 0, 0);
+camera.position.set(60, 60, 0);
 controls.update();
 
 scene.add(gamecube);
@@ -36,6 +36,10 @@ scene.add(food);
 
 for (let index = 0; index < grid.length; index++) {
     scene.add(grid[index]);   
+}
+
+for (let index = 0; index < helpers.length; index++) {
+    scene.add(helpers[index]);  
 }
 
 const snakeGeometry = new THREE.BoxGeometry(1, 1, 1)
@@ -107,6 +111,7 @@ function animate() {
         } else if (pressedKey == "e") {
             snake.position.x = snake.position.x - 1;
         }
+        camera.lookAt(snake.position.x, snake.position.y, snake.position.z)
         for (let index = 0; index < tail.length; index++) {
             if (snake.position.x == tail[index].position.x && snake.position.y == tail[index].position.y && snake.position.z == tail[index].position.z) {
                 death();
@@ -124,7 +129,6 @@ function animate() {
     
     if (Math.abs(snake.position.x) > 25 || Math.abs(snake.position.y) > 25 || Math.abs(snake.position.z) > 25) {
         death();
-        window.alert("Du noob bist gestorben!")
     }
     controls.update();
     renderer.render(scene, camera);
