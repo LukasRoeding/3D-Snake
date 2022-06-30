@@ -20,6 +20,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000);
 renderer.domElement.addEventListener("click", onclick, true);
 document.body.appendChild(renderer.domElement);
+var audio = new Audio('eat-sound.mp3');
 
 var raycaster = new THREE.Raycaster();
 
@@ -50,6 +51,7 @@ const snake = new THREE.Mesh(snakeGeometry, snakeMaterial);
 scene.add(snake);
 
 function eat(food) {
+    audio.play();
     foodEaten = true;
     var num = Math.floor(Math.random()*20) + 1; // this will get a number between 1 and 99;
     num *= Math.round(Math.random()) ? 1 : -1; // this will add minus sign in 50% of cases
