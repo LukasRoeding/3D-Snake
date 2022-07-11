@@ -149,7 +149,7 @@ function animate() {
             pastGameStates.push({
                 food: foodPositions,
                 snakePosition: [snake.position.x, snake.position.y, snake.position.z],
-                tail: tailPositions
+                tail: tailPositions,
             })
             if (foodEaten) {
             newTail();
@@ -206,6 +206,10 @@ function animate() {
                 tail[index].position.x = pastGameStates[pastGameStates.length - 1].tail[index].x;
                 tail[index].position.y = pastGameStates[pastGameStates.length - 1].tail[index].y;
                 tail[index].position.z = pastGameStates[pastGameStates.length - 1].tail[index].z;
+            }
+            for (let index = pastGameStates[pastGameStates.length - 1].tail.length; index < tail.length; index++) {
+                scene.remove(tail[index])
+                tail.pop()
             }
             pastGameStates.pop()
         }
