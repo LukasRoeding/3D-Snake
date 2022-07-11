@@ -9,13 +9,29 @@ let highscore = 0;
 const highscoreElement = document.getElementById("highscore")
 let movePause = false;
 let tail = [];
+let pastGameStates = [];
+let timetravel = false;
 let pressedKey = 'w'
 let activeControl;
 let foodEaten = false;
 let counter = 3;
+
+document.addEventListener('keydown', logKey);
+function logKey(e) {
+    if (e.keyCode == 32) {
+        timetravel = true;
+    }
+}
+document.addEventListener('keyup', keyUp);
+function keyUp(e) {
+    if (e.keyCode == 32) {
+        timetravel = false;
+    }
+}
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000);
 renderer.domElement.addEventListener("click", onclick, true);
@@ -113,50 +129,87 @@ function onclick(event) {
 function animate() {
     requestAnimationFrame(animate);
     if (movePause == false) {
-        if (foodEaten) {
+        if (!timetravel || pastGameStates.length == 0) {
+            let foodPositions = []
+            for (let index = 0; index < allTheFood.length; index++) {
+                foodPositions.push({
+                    x: allTheFood[index].position.x,
+                    y: allTheFood[index].position.y,
+                    z: allTheFood[index].position.z
+                })  
+            }
+            let tailPositions = [];
+            for (let index = 0; index < tail.length; index++) {
+                tailPositions.push({
+                    x: tail[index].position.x,
+                    y: tail[index].position.y,
+                    z: tail[index].position.z
+                })  
+            }
+            pastGameStates.push({
+                food: foodPositions,
+                snakePosition: [snake.position.x, snake.position.y, snake.position.z],
+                tail: tailPositions
+            })
+            if (foodEaten) {
             newTail();
             counter--;
             if (counter == 0) {
                 foodEaten = false;
                 counter = 3;
             }
-            
-        }
-        if (tail[0]) {
-            for (let index = tail.length - 1; index >= 1; index--) {
-                tail[index].position.x = tail[index-1].position.x;
-                tail[index].position.y = tail[index-1].position.y;
-                tail[index].position.z = tail[index-1].position.z;
+                 
             }
-            tail[0].position.x = snake.position.x;
-            tail[0].position.y = snake.position.y;
-            tail[0].position.z = snake.position.z;
-        }
-        if (pressedKey == "w") {
-            snake.position.y = snake.position.y + 1;
-        } else if (pressedKey == "s") {
-            snake.position.y = snake.position.y - 1;
-        } else if (pressedKey == "a") {
-            snake.position.z = snake.position.z + 1;
-        } else if (pressedKey == "d") {
-            snake.position.z = snake.position.z - 1;
-        } else if (pressedKey == "q") {
-            snake.position.x = snake.position.x + 1;
-        } else if (pressedKey == "e") {
-            snake.position.x = snake.position.x - 1;
-        }
-        for (let index = 0; index < tail.length; index++) {
-            if (snake.position.x == tail[index].position.x && snake.position.y == tail[index].position.y && snake.position.z == tail[index].position.z) {
-                death();
+            if (tail[0]) {
+                for (let index = tail.length - 1; index >= 1; index--) {
+                    tail[index].position.x = tail[index-1].position.x;
+                    tail[index].position.y = tail[index-1].position.y;
+                    tail[index].position.z = tail[index-1].position.z;
+                }
+                tail[0].position.x = snake.position.x;
+                tail[0].position.y = snake.position.y;
+                tail[0].position.z = snake.position.z;
             }
-        }
-        for (let index = 0; index < allTheFood.length; index++) {
-            if (snake.position.x == allTheFood[index].position.x && snake.position.y == allTheFood[index].position.y && snake.position.z == allTheFood[index].position.z) {
-                eat(allTheFood[index]);
-            }   
+            if (pressedKey == "w") {
+                snake.position.y = snake.position.y + 1;
+            } else if (pressedKey == "s") {
+                snake.position.y = snake.position.y - 1;
+            } else if (pressedKey == "a") {
+                snake.position.z = snake.position.z + 1;
+            } else if (pressedKey == "d") {
+                snake.position.z = snake.position.z - 1;
+            } else if (pressedKey == "q") {
+                snake.position.x = snake.position.x + 1;
+            } else if (pressedKey == "e") {
+                snake.position.x = snake.position.x - 1;
+            }
+            for (let index = 0; index < tail.length; index++) {
+                if (snake.position.x == tail[index].position.x && snake.position.y == tail[index].position.y && snake.position.z == tail[index].position.z) {
+                    death();
+                }
+            }
+            for (let index = 0; index < allTheFood.length; index++) {
+                if (snake.position.x == allTheFood[index].position.x && snake.position.y == allTheFood[index].position.y && snake.position.z == allTheFood[index].position.z) {
+                    eat(allTheFood[index]);
+                }
+            }
+        } else {
+            snake.position.x = pastGameStates[pastGameStates.length - 1].snakePosition[0];
+            snake.position.y = pastGameStates[pastGameStates.length - 1].snakePosition[1];
+            snake.position.z = pastGameStates[pastGameStates.length - 1].snakePosition[2];
+            for (let index = 0; index < pastGameStates[pastGameStates.length - 1].food.length; index++) {
+                allTheFood[index].position.x = pastGameStates[pastGameStates.length - 1].food[index].x;
+                allTheFood[index].position.y = pastGameStates[pastGameStates.length - 1].food[index].y;
+                allTheFood[index].position.z = pastGameStates[pastGameStates.length - 1].food[index].z;
+            }
+            for (let index = 0; index < pastGameStates[pastGameStates.length - 1].tail.length; index++) {
+                tail[index].position.x = pastGameStates[pastGameStates.length - 1].tail[index].x;
+                tail[index].position.y = pastGameStates[pastGameStates.length - 1].tail[index].y;
+                tail[index].position.z = pastGameStates[pastGameStates.length - 1].tail[index].z;
+            }
+            pastGameStates.pop()
         }
         movePause = true; 
-        
         setTimeout(() => {
             movePause = false
         }, 250)
